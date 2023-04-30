@@ -1,5 +1,8 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 import { getUpcomingMeetups } from "./utils/api.js";
+
+const port = process.env.PORT || 3000;
 
 /**
  * @type {import('fastify').FastifyInstance} Instance of Fastify
@@ -7,6 +10,8 @@ import { getUpcomingMeetups } from "./utils/api.js";
 const fastify = Fastify({
   logger: true,
 });
+
+await fastify.register(cors, {});
 
 const cache = {};
 
@@ -32,7 +37,7 @@ fastify.get("/upcoming-meetups", async function (request, reply) {
   reply.send({ upcomingMeetups });
 });
 
-fastify.listen({ port: 3000 }, function (err, address) {
+fastify.listen({ port }, function (err, address) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
